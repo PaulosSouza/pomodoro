@@ -1,10 +1,11 @@
 import http from "http";
 import { Server } from "socket.io";
 
-import { StartCounter } from "@common/Events";
-import { StartCounterHandle } from "@handles/index";
+import { JoinRoom, StartCounter } from "@common/Events";
+import { StartCounterHandler, JoinRoomHandler } from "@handlers/index";
 
-const startCounterHandle = new StartCounterHandle();
+const startCounterHandler = new StartCounterHandler();
+const joinRoomHandler = new JoinRoomHandler();
 
 export function socket(app: Express.Application) {
   const server = http.createServer(app);
@@ -16,7 +17,11 @@ export function socket(app: Express.Application) {
 
   io.on("connection", (socket) => {
     socket.on(StartCounter, (params) =>
-      startCounterHandle.execute(socket, params)
+      startCounterHandler.execute(io, socket, params)
+    );
+
+    socket.on(JoinRoom, (params) =>
+      joinRoomHandler.execute(io, socket, params)
     );
   });
 

@@ -1,17 +1,22 @@
-import { Socket } from "socket.io";
+import { Server, Socket } from "socket.io";
 import { Counter } from "@common/Emiters";
-import { ICounterDTO, IStartCounterDTO } from "@dtos/index";
+import { ICounterDTO } from "@dtos/ICounterDTO";
+import { IStartCounterDTO } from "@dtos/IStartCounterDTO";
 import { CounterPomodoro } from "@modules/CounterPomodoros";
 import { Pomodoro } from "@modules/Pomodoro";
 
-class StartCounterHandle {
+class StartCounterHandler {
   private pomoCounter: CounterPomodoro;
 
   constructor() {
     this.pomoCounter = new CounterPomodoro();
   }
 
-  execute(socket: Socket, { counter, type, roomId }: IStartCounterDTO): void {
+  execute(
+    io: Server,
+    _: Socket,
+    { counter, type, roomId }: IStartCounterDTO
+  ): void {
     const pomoActive = this.pomoCounter.findById(roomId);
 
     if (pomoActive?.isRunning) {
@@ -19,7 +24,7 @@ class StartCounterHandle {
     }
 
     const emitCounter = (params: ICounterDTO) =>
-      socket.in(roomId).emit(Counter, params);
+      io.to(roomId).emit(Counter, params);
 
     if (pomoActive && !pomoActive.isRunning) {
       pomoActive.start({
@@ -44,4 +49,4 @@ class StartCounterHandle {
   }
 }
 
-export default StartCounterHandle;
+export default StartCounterHandler;

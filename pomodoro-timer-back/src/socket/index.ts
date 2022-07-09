@@ -1,3 +1,4 @@
-import StartCounterHandle from "./handles/StartCounterHandle";
+import JoinRoomHandler from "./handlers/JoinRoomHandler";
+import StartCounterHandler from "./handlers/StartCounterHandler";
 
-export { StartCounterHandle };
+export { StartCounterHandler, JoinRoomHandler };
