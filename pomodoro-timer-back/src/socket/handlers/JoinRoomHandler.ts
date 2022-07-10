@@ -1,5 +1,6 @@
 import { Server, Socket } from "socket.io";
 import { Message } from "@common/Emiters";
+import { IResponseDTO } from "@dtos/default/IResponseDTO";
 import { IJoinRoomDTO } from "@dtos/IJoinRoomDTO";
 
 class JoinRoomHandler {
@@ -12,7 +13,15 @@ class JoinRoomHandler {
 
     await socket.join(roomId);
 
-    socket.broadcast.to(roomId).emit(Message, "New device has joined!");
+    socket.broadcast.to(roomId).emit(Message, {
+      success: true,
+      message: "New device connected",
+    } as IResponseDTO);
+
+    socket.emit(Message, {
+      success: true,
+      message: "Device connected sucessufuly",
+    } as IResponseDTO);
   }
 }
 
