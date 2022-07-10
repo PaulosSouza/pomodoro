@@ -29,10 +29,9 @@ class Pomodoro {
     type: Type;
     counter: number;
   }) {
-    if (!this.isRunning) {
-      this.counter = counter;
-      this.type = type;
-    }
+    if (this.isRunning) return;
+
+    this.counter = counter;
 
     this.setInterval = setInterval(() => {
       const counter = this.counter--;
